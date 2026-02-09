@@ -173,7 +173,7 @@ In your Vercel Project Settings > Environment Variables:
 
 | Name | Value |
 |------|-------|
-| `VITE_API_BASE` | `https://dsharma08k-lumeo-backend.hf.space/api/v1` |
+| `VITE_API_BASE` | `https://<your-hf-username>-<space-name>.hf.space/api/v1` |
 
 ---
 
