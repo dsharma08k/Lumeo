@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 # Switch to non-root user
 USER user
 ENV PATH="/home/user/.local/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
 
 # Copy requirements from backend
 COPY --chown=user backend/requirements.txt requirements.txt
