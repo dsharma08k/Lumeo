@@ -218,7 +218,7 @@ Training a low-light enhancer is tricky. Standard loss functions (like MSE) prod
 
 ---
 
-## 🔬 Training Details
+## Training Details
 
 ### Dataset
 - **Source:** LOL (Low-Light) Dataset
