@@ -296,7 +296,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Email: dsharma08k@gmail.com
 
 ---
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Dataset:** [LOL Dataset](https://daooshee.github.io/BMVC2018website/) by Chen Wei et al.
 - **Inspiration:** RetinexNet paper for low-light enhancement
