@@ -32,6 +32,7 @@ app_port: 7860
 ##  Live Demo
 
 **Try it here:** https://lumeo-frontend.vercel.app
+
 **API Docs:** https://dsharma08k-lumeo-backend.hf.space/docs
 
 ![Demo GIF](frontend/public/demo.gif)
