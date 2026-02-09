@@ -31,7 +31,8 @@ app_port: 7860
 
 ##  Live Demo
 
-**Try it here:** [Lumeo Live App](https://lumeo-frontend.vercel.app)
+**Try it here:** https://lumeo-frontend.vercel.app
+**API Docs:** https://dsharma08k-lumeo-backend.hf.space/docs
 
 ![Demo GIF](frontend/public/demo.gif)
 
@@ -45,6 +46,7 @@ app_port: 7860
 | **Structure (SSIM)** | ~0.84 | Structural Similarity Index |
 | **Inference Time** | ~586 ms | Average on Standard CPU (No GPU) |
 | **Model Size** | ~124 MB | 31M Parameters (Float32) |
+| **Training Data** | LOL Dataset | 485 paired images |
 
 ---
 
@@ -215,6 +217,35 @@ Training a low-light enhancer is tricky. Standard loss functions (like MSE) prod
 
 ---
 
+## 🔬 Training Details
+
+### Dataset
+- **Source:** LOL (Low-Light) Dataset
+- **Size:** 485 paired images (low-light + normal-light)
+- **Split:** 470 train / 15 validation
+- **Preprocessing:** Resized to 256x256, normalized to [-1, 1]
+
+### Hyperparameters
+```python
+batch_size = 8
+learning_rate = 0.0002
+epochs = 100
+optimizer = AdamW
+scheduler = CosineAnnealingLR
+loss = L1 + 0.1*Perceptual + 0.1*SSIM
+```
+
+### Training Results
+| Epoch | Train Loss | Val PSNR | Val SSIM |
+|-------|-----------|----------|----------|
+| 25    | 0.045     | 20.1 dB  | 0.78     |
+| 50    | 0.032     | 21.5 dB  | 0.82     |
+| 100   | 0.028     | 22.3 dB  | 0.84     |
+
+Training time: ~8 hours on NVIDIA T4 GPU
+
+---
+
 ##  Challenges & Solutions
 
 ### Challenge 1: Balacing Noise and Detail
@@ -260,8 +291,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Divyanshu Sharma**
 - GitHub: [@dsharma08k](https://github.com/dsharma08k)
 - LinkedIn: [Divyanshu Sharma](https://www.linkedin.com/in/dsharma08k/)
-- Peerlist: [dsharma08k](https://peerlist.io/dsharma08k)
+- Peerlist: [Divyanshu Sharma](https://peerlist.io/dsharma08k)
+- Email: dsharma08k@gmail.com
 
 ---
+## 🙏 Acknowledgments
 
+- **Dataset:** [LOL Dataset](https://daooshee.github.io/BMVC2018website/) by Chen Wei et al.
+- **Inspiration:** RetinexNet paper for low-light enhancement
+- **Framework:** PyTorch and FastAPI communities
+
+---
 ** If you found this project helpful, please consider giving it a star!**
