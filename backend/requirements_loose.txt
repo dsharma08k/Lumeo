@@ -1,0 +1,19 @@
+fastapi
+uvicorn
+python-multipart
+torch
+torchvision
+numpy
+Pillow
+python-dotenv
+supabase
+xgboost
+scikit-learn
+slowapi
+redis
+psutil
+python-magic-bin; sys_platform == 'win32'
+python-magic; sys_platform != 'win32'
+pytest
+pytest-asyncio
+httpx

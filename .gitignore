@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+*.log
+
+# Models
+models/*.pth
+!models/__init__.py
+
+# Data
+data/
+datasets/
+backend/lumeo_unet.pth
+
+# Deployment
+# hfs_deploy/
