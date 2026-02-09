@@ -33,6 +33,20 @@ class ModelManager:
 
         print(f"Loading model from {MODEL_PATH}...")
         try:
+            # Debug: Check file size and header
+            if MODEL_PATH.exists():
+                size_mb = MODEL_PATH.stat().st_size / (1024 * 1024)
+                print(f"Model file found at {MODEL_PATH} (Size: {size_mb:.2f} MB)")
+                
+                # Check for LFS pointer
+                with open(MODEL_PATH, 'rb') as f:
+                    header = f.read(100)
+                    print(f"File header: {header}")
+                    if b"version https://git-lfs.github.com/spec/v1" in header:
+                        print("CRITICAL ERROR: Model file is an LFS pointer, not the actual weights!")
+            else:
+                print(f"CRITICAL ERROR: Model file not found at {MODEL_PATH}")
+
             # Initialize model architecture
             self.model = UNet()
             
