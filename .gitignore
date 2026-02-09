@@ -9,6 +9,7 @@ venv/
 # Models
 models/*.pth
 !models/__init__.py
+!models/lumeo_unet.pth
 
 # Data
 data/
