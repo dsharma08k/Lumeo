@@ -240,7 +240,7 @@ async def get_shared_result(share_id: str):
         logger.error(f"Error fetching shared result: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/health")
+@router.api_route("/health", methods=["GET", "HEAD"])
 async def health_check():
     """
     Health check endpoint for monitoring.
