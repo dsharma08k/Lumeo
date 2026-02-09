@@ -16,16 +16,18 @@ RUN apt-get update && apt-get install -y \
 USER user
 ENV PATH="/home/user/.local/bin:$PATH"
 
-# Copy requirements from hfs_deploy
-COPY --chown=user hfs_deploy/requirements.txt requirements.txt
+# Copy requirements from backend
+COPY --chown=user backend/requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Copy application code from hfs_deploy (flattened structure)
-COPY --chown=user hfs_deploy/ .
-# Note: This copies main.py, config.py, api/, core/, models/ to /app/
+# Copy backend code
+COPY --chown=user backend/ backend/
+COPY --chown=user models/ models/
+# Create empty init if needed for models
+RUN touch models/__init__.py
 
 # Expose port
 EXPOSE 7860
 
-# Run application (main.py is now at root of /app)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Run application
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
