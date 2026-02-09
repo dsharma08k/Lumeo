@@ -12,7 +12,7 @@ app_port: 7860
 
 ![Banner](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/banner-placeholder.png?raw=true)
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://huggingface.co/spaces/dsharma08k/Lumeo)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://lumeo-frontend.vercel.app)
 [![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/dsharma08k/Lumeo)
 [![License](https://img.shields.io/badge/license-MIT-orange)](LICENSE)
 
@@ -31,7 +31,7 @@ app_port: 7860
 
 ##  Live Demo
 
-**Try it here:** [Lumeo on Hugging Face](https://huggingface.co/spaces/dsharma08k/Lumeo)
+**Try it here:** [Lumeo Live App](https://lumeo-frontend.vercel.app)
 
 ![Demo GIF](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/demo.gif?raw=true)
 
@@ -71,12 +71,13 @@ graph LR
 - **Styling**: Tailwind CSS + Framer Motion
 - **Icons**: Lucide React
 - **HTTP Client**: Axios
+- **Deployment**: Vercel
 
 ### Backend
 - **Framework**: FastAPI
 - **ML/CV**: PyTorch, Torchvision, PIL, NumPy
 - **Database**: Supabase (for optional feedback/logging)
-- **Deployment**: Docker, Hugging Face Spaces
+- **Deployment**: Hugging Face Spaces (Docker)
 
 ### Machine Learning
 - **Model**: U-Net (~31M params) with custom Encoder-Decoder blocks
@@ -155,21 +156,24 @@ MAX_FILE_SIZE_MB=10
 LOG_LEVEL=INFO
 ```
 
-### 2. Production (Hugging Face Spaces)
-For the live backend, **do not** commit `.env`. Instead, go to your Space's dashboard:
-1. Click **Settings** (top right of your Space).
-2. Scroll to **Variables and secrets**.
-3. Click **New secret** (for sensitive keys) or **New variable** (for public config).
+### 2. Production
+#### Backend (Hugging Face Spaces)
+For the live backend, **do not** commit `.env`. Instead, configure these in the Space's **Settings > Variables and secrets**.
 
-**Recommended Configuration:**
+| Name | Value | Type | Notes |
+|------|-------|------|-------|
+| `ALLOWED_ORIGINS` | `https://lumeo-frontend.vercel.app` | Variable | **Crucial:** Must match your Vercel frontend URL so it can access the API. |
+| `MAX_FILE_SIZE_MB` | `10` | Variable | |
+| `LOG_LEVEL` | `WARNING` | Variable | |
+| `SUPABASE_URL` | *your-supabase-url* | Secret | Optional (for feedback) |
+| `SUPABASE_KEY` | *your-anon-key* | Secret | Optional (for feedback) |
 
-| Name | Value | Type |
-|------|-------|------|
-| `ALLOWED_ORIGINS` | `https://lumeo-frontend.vercel.app` | Variable |
-| `MAX_FILE_SIZE_MB` | `10` | Variable |
-| `LOG_LEVEL` | `WARNING` | Variable |
-| `SUPABASE_URL` | *your-supabase-url* | Secret |
-| `SUPABASE_KEY` | *your-anon-key* | Secret |
+#### Frontend (Vercel)
+In your Vercel Project Settings > Environment Variables:
+
+| Name | Value |
+|------|-------|
+| `VITE_API_BASE` | `https://dsharma08k-lumeo-backend.hf.space/api/v1` |
 
 ---
 
