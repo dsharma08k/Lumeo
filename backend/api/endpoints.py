@@ -259,7 +259,7 @@ async def health_check():
             "timestamp": datetime.utcnow().isoformat(),
             "model": {
                 "loaded": model_loaded,
-                "device": str(model_manager.model.device) if model_loaded else None
+                "device": str(next(model_manager.model.parameters()).device) if model_loaded else None
             },
             "system": {
                 "cpu_percent": cpu_percent,
