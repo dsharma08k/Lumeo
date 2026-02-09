@@ -19,7 +19,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Copy requirements from backend
 COPY --chown=user backend/requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -v -r requirements.txt
 
 # Copy backend code
 COPY --chown=user backend/ backend/
