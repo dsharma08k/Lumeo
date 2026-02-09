@@ -162,7 +162,7 @@ For the live backend, **do not** commit `.env`. Instead, configure these in the 
 
 | Name | Value | Type | Notes |
 |------|-------|------|-------|
-| `ALLOWED_ORIGINS` | `https://lumeo-frontend.vercel.app` | Variable | **Crucial:** Must match your Vercel frontend URL so it can access the API. |
+| `ALLOWED_ORIGINS` | `https://your-frontend.vercel.app` | Variable | **Crucial:** Must match your Vercel frontend URL so it can access the API. |
 | `MAX_FILE_SIZE_MB` | `10` | Variable | |
 | `LOG_LEVEL` | `WARNING` | Variable | |
 | `SUPABASE_URL` | *your-supabase-url* | Secret | Optional (for feedback) |
