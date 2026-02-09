@@ -10,7 +10,7 @@ app_port: 7860
 
 # Lumeo - Low-Light Image Enhancement
 
-![Banner](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/banner-placeholder.png?raw=true)
+![Banner](frontend/public/banner-placeholder.png)
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://lumeo-frontend.vercel.app)
 [![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/dsharma08k/Lumeo)
@@ -33,7 +33,7 @@ app_port: 7860
 
 **Try it here:** [Lumeo Live App](https://lumeo-frontend.vercel.app)
 
-![Demo GIF](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/demo.gif?raw=true)
+![Demo GIF](frontend/public/demo.gif)
 
 ---
 
@@ -90,11 +90,11 @@ graph LR
 ##  Screenshots
 
 ### Main Interface
-![Main Interface](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/screenshot-main.png?raw=true)
+![Main Interface](frontend/public/screenshot-main.png)
 *Clean dark-mode interface for distraction-free enhancement.*
 
 ### Comparison View
-![Results](https://github.com/dsharma08k/Lumeo/blob/main/frontend/public/screenshot-results.png?raw=true)
+![Results](frontend/public/screenshot-results.png)
 *Side-by-side comparison of original low-light and enhanced result.*
 
 ---
