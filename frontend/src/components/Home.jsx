@@ -3,12 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { analyzeImage, enhanceImage } from '../services/api';
 import DropZone from '../components/DropZone';
 import ComparisonView from '../components/ComparisonView';
-import Feedback from '../components/Feedback';
 import ShareModal from '../components/ShareModal';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HelpModal, { useFirstVisit } from '../components/HelpModal';
-import { Loader2, AlertTriangle, Sparkles, Share2 } from 'lucide-react';
+import { Loader2, AlertTriangle } from 'lucide-react';
 
 function Home() {
     const [status, setStatus] = useState('idle');
@@ -77,28 +76,18 @@ function Home() {
 
             <main className="main-content">
                 <div className="glass-panel">
-                    {/* Panel Header */}
-                    <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <div className="panel-topbar">
                         {status !== 'idle' && (
                             <button
                                 onClick={reset}
-                                style={{
-                                    background: 'transparent',
-                                    border: '1px solid var(--text-secondary)',
-                                    color: 'var(--text-secondary)',
-                                    padding: '6px 14px',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    fontSize: '0.85rem',
-                                    transition: 'all 0.2s'
-                                }}
+                                className="btn-minimal panel-reset-btn"
                             >
                                 New Upload
                             </button>
                         )}
                     </div>
 
-                    <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="stage-container">
                         <AnimatePresence mode="wait">
                             {status === 'idle' && (
                                 <motion.div
@@ -118,12 +107,12 @@ function Home() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    style={{ textAlign: 'center' }}
+                                    className="state-card"
                                 >
                                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
                                         <Loader2 size={48} color="var(--accent)" />
                                     </motion.div>
-                                    <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>Analyzing image...</p>
+                                    <p className="state-text">Analyzing image...</p>
                                 </motion.div>
                             )}
 
@@ -133,42 +122,23 @@ function Home() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}
+                                    className="ready-state"
                                 >
-                                    <div style={{
-                                        position: 'relative',
-                                        maxHeight: '280px',
-                                        borderRadius: '16px',
-                                        overflow: 'hidden',
-                                        border: '1px solid var(--glass-border)'
-                                    }}>
+                                    <div className="preview-card">
                                         <img
                                             src={preview}
                                             alt="Preview"
-                                            style={{ maxHeight: '280px', width: 'auto', display: 'block' }}
+                                            className="preview-image"
                                         />
                                         {analysis && (
-                                            <div style={{
-                                                position: 'absolute',
-                                                bottom: '0.75rem',
-                                                left: '50%',
-                                                transform: 'translateX(-50%)',
-                                                background: 'rgba(0,0,0,0.85)',
-                                                padding: '6px 14px',
-                                                borderRadius: '20px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '6px',
-                                                border: `1px solid ${analysis.is_low_light ? '#facc15' : 'var(--glass-border)'}`,
-                                                backdropFilter: 'blur(8px)'
-                                            }}>
+                                            <div className={`analysis-badge ${analysis.is_low_light ? 'analysis-badge-low' : 'analysis-badge-ok'}`}>
                                                 {analysis.is_low_light ? (
                                                     <>
-                                                        <AlertTriangle size={14} color="#facc15" />
-                                                        <span style={{ color: '#facc15', fontSize: '0.8rem' }}>Low Light Detected</span>
+                                                        <AlertTriangle size={14} />
+                                                        <span>Low Light Detected</span>
                                                     </>
                                                 ) : (
-                                                    <span style={{ color: '#fff', fontSize: '0.8rem' }}>Lighting looks okay</span>
+                                                    <span>Lighting looks okay</span>
                                                 )}
                                             </div>
                                         )}
@@ -202,7 +172,7 @@ function Home() {
                                     key="complete"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    style={{ width: '100%', height: '100%' }}
+                                    className="result-state"
                                 >
                                     <ComparisonView
                                         original={preview}

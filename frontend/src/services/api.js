@@ -26,7 +26,6 @@ export const enhanceImage = async (file) => {
     });
 
     const data = response.data;
-    console.log("Enhance Data:", data);
 
     const base64Image = data.image;
     const format = data.format || 'png';

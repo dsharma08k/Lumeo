@@ -1,28 +1,26 @@
-
+import os
+import io
+import magic
+import base64
+import logging
+import psutil
+from datetime import datetime
+from typing import Optional
 from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
+from PIL import Image
+from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from backend.core.model import model_manager
 from backend.core.image import process_image, tensor_to_bytes, analyze_brightness
 from backend.core.db import supabase
-from pydantic import BaseModel
-from typing import Optional
-import io
-import magic
-from PIL import Image
-import base64
-import logging
-from datetime import datetime
-import psutil
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 logger = logging.getLogger("lumeo")
 
 # Configuration
-# Configuration
-import os
 MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", 10))
 MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024
 MAX_DIMENSION = int(os.getenv("MAX_IMAGE_DIMENSION", 4096))
@@ -108,7 +106,7 @@ async def enhance_image(request: Request, file: UploadFile = File(...)):
         fmt = "JPEG" if mime_type == "image/jpeg" else "PNG"
         
         # Convert tensor to bytes
-        img_bytes = tensor_to_bytes(output_tensor, format=fmt)
+        img_bytes = tensor_to_bytes(output_tensor, format=fmt, input_tensor=input_tensor)
         
         # Encode to base64
         base64_encoded_image = base64.b64encode(img_bytes).decode('utf-8')
@@ -153,11 +151,9 @@ async def submit_feedback(feedback: FeedbackRequest):
     """
     Store user feedback and metadata in Supabase.
     """
+    if supabase is None:
+        return {"status": "skipped", "message": "Supabase not configured"}
     try:
-        from backend.config import SUPABASE_URL
-        if "your-project" in SUPABASE_URL or not SUPABASE_URL:
-            return {"status": "skipped", "message": "Supabase not configured"}
-
         data = feedback.dict()
         response = supabase.table("feedback").insert(data).execute()
         return {"status": "success", "data": response.data}
@@ -177,11 +173,10 @@ async def share_result(
     Upload images to public storage and create a shareable link.
     """
     try:
-        from backend.config import SUPABASE_URL
-        if "your-project" in SUPABASE_URL or not SUPABASE_URL:
+        if supabase is None:
             raise HTTPException(
-                status_code=503, 
-                detail="Sharing disabled. Please configure SUPABASE_URL in backend/.env"
+                status_code=503,
+                detail="Sharing is not available. Configure Supabase credentials to enable it."
             )
 
         import uuid

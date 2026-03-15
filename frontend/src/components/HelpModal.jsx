@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, HelpCircle, ChevronRight } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 
 const ONBOARDING_STEPS = [
     {
@@ -98,15 +98,6 @@ const HelpModal = ({ isOpen, onClose }) => {
                 </div>
             </motion.div>
         </div>
-    );
-};
-
-// Help button component
-export const HelpButton = ({ onClick }) => {
-    return (
-        <button className="help-button" onClick={onClick} title="How to use">
-            <HelpCircle size={20} />
-        </button>
     );
 };
 

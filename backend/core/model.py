@@ -1,6 +1,6 @@
 
-import torch
 import sys
+import torch
 from pathlib import Path
 from backend.config import MODEL_PATH, DEVICE
 
@@ -9,13 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.append(str(BASE_DIR))
 
-try:
-    from models.unet import UNet
-except ImportError:
-    # Fallback if running from a different context
-    import sys
-    sys.path.append(str(BASE_DIR))
-    from models.unet import UNet
+from models.unet import UNet
 
 class ModelManager:
     _instance = None
@@ -24,7 +18,6 @@ class ModelManager:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(ModelManager, cls).__new__(cls)
-            # cls._instance.load_model() # Removed to allow lazy loading and avoid import-time error
         return cls._instance
 
     def load_model(self):
@@ -37,15 +30,11 @@ class ModelManager:
             if MODEL_PATH.exists():
                 size_mb = MODEL_PATH.stat().st_size / (1024 * 1024)
                 print(f"Model file found at {MODEL_PATH} (Size: {size_mb:.2f} MB)")
-                
-                # Check for LFS pointer
                 with open(MODEL_PATH, 'rb') as f:
-                    header = f.read(100)
-                    print(f"File header: {header}")
-                    if b"version https://git-lfs.github.com/spec/v1" in header:
-                        print("CRITICAL ERROR: Model file is an LFS pointer, not the actual weights!")
+                    if b"version https://git-lfs.github.com/spec/v1" in f.read(100):
+                        raise RuntimeError("Model file is a Git LFS pointer. Download the actual weights.")
             else:
-                print(f"CRITICAL ERROR: Model file not found at {MODEL_PATH}")
+                raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
 
             # Initialize model architecture
             self.model = UNet()

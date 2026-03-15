@@ -28,7 +28,19 @@ MODEL_PATH = get_model_path()
 DEVICE = os.getenv("DEVICE", "cpu")  # Can be overridden via env
 
 # Image settings
-IMG_SIZE = 256
+IMG_SIZE = int(os.getenv("IMG_SIZE", 256))
+MAX_INFER_SIZE = int(os.getenv("MAX_INFER_SIZE", 512))
+
+# Post-processing settings (no-retrain quality tuning)
+HIGHLIGHT_BLEND_STRENGTH = float(os.getenv("HIGHLIGHT_BLEND_STRENGTH", 0.65))
+HIGHLIGHT_START = float(os.getenv("HIGHLIGHT_START", 0.82))
+HIGHLIGHT_END = float(os.getenv("HIGHLIGHT_END", 0.98))
+OUTPUT_GAMMA = float(os.getenv("OUTPUT_GAMMA", 1.05))
+SHADOW_BLEND_STRENGTH = float(os.getenv("SHADOW_BLEND_STRENGTH", 0.78))
+SHADOW_START = float(os.getenv("SHADOW_START", 0.05))
+SHADOW_END = float(os.getenv("SHADOW_END", 0.45))
+CLASSIC_SHADOW_GAMMA = float(os.getenv("CLASSIC_SHADOW_GAMMA", 0.72))
+CLASSIC_BLEND = float(os.getenv("CLASSIC_BLEND", 0.55))
 
 # Supabase settings
 SUPABASE_URL = os.getenv("SUPABASE_URL")

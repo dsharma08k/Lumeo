@@ -28,7 +28,7 @@ const SharedResult = () => {
 
     if (loading) {
         return (
-            <div className="glass-panel" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="glass-panel shared-state-panel">
                 <Loader2 size={48} className="spin" color="var(--accent)" />
             </div>
         );
@@ -36,10 +36,10 @@ const SharedResult = () => {
 
     if (error) {
         return (
-            <div className="glass-panel" style={{ textAlign: 'center' }}>
-                <h2 style={{ color: '#f87171' }}>404 Not Found</h2>
+            <div className="glass-panel shared-state-panel shared-state-error">
+                <h2>404 Not Found</h2>
                 <p>{error}</p>
-                <Link to="/" style={{ color: 'var(--accent)', marginTop: '1rem', display: 'inline-block' }}>Go Home</Link>
+                <Link to="/" className="shared-home-link">Go Home</Link>
             </div>
         );
     }
@@ -47,15 +47,15 @@ const SharedResult = () => {
     return (
         <div className="main-content">
             <div className="glass-panel">
-                <div style={{ marginBottom: '1rem' }}>
-                    <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                <div className="shared-topbar">
+                    <Link to="/" className="shared-back-link">
                         <ArrowLeft size={16} />
                         Try Lumeo Yourself
                     </Link>
                 </div>
 
-                <div style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div style={{ width: '100%', maxWidth: '800px', height: '100%' }}>
+                <div className="shared-result-wrap">
+                    <div className="shared-result-inner">
                         <ComparisonView
                             original={data.original_url}
                             enhanced={data.enhanced_url}
@@ -63,8 +63,8 @@ const SharedResult = () => {
                     </div>
                 </div>
 
-                <div style={{ textAlign: 'center', marginTop: '2rem', opacity: 0.7 }}>
-                    <p style={{ fontSize: '0.9rem' }}>Shared via Lumeo - Low Light Image Enhancement</p>
+                <div className="shared-footnote">
+                    <p>Shared via Lumeo - Low Light Image Enhancement</p>
                 </div>
             </div>
         </div>

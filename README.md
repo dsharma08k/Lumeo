@@ -25,7 +25,8 @@ app_port: 7860
 - **Deep Learning Enhancement**: Recovers color and detail from near-pitch-black images using a custom U-Net model.
 - **Privacy-First**: Run inference locally or on your own server—no data leaves your control unless you want it to.
 - **Fast Inference**: Optimized model delivers results in under 600ms on standard CPU hardware.
-- **Modern Interface**: Clean, responsive React frontend for easy drag-and-drop enhancement.
+- **Apple-Inspired Dark UI**: Glass panels, subtle depth, and a cohesive dark visual language across all screens, cards, and buttons.
+- **Animated Brand Motion**: Header logo includes a soft pulse + float animation for a premium feel.
 
 ---
 
@@ -56,11 +57,12 @@ app_port: 7860
 ```mermaid
 graph LR
     A[User] -->|Upload Image| B[React Frontend]
-    B -->|POST /enhance| C[FastAPI Backend]
+   B -->|POST /enhance_v2| C[FastAPI Backend]
     C -->|Input Tensor| D[Model Manager]
     D -->|Inference| E[U-Net Model]
+   C -->|Adaptive Post-Processing| F[Shadow/Highlight Blending]
     E -->|Enhanced Tensor| D
-    D -->|Processed Image| C
+   F -->|Final Image| C
     C -->|JSON Response| B
     B -->|Display| A
 ```
@@ -71,7 +73,7 @@ graph LR
 
 ### Frontend
 - **Framework**: React (Vite)
-- **Styling**: Tailwind CSS + Framer Motion
+- **Styling**: Custom CSS + Framer Motion
 - **Icons**: Lucide React
 - **HTTP Client**: Axios
 - **Deployment**: Vercel
@@ -98,7 +100,7 @@ graph LR
 
 ### Comparison View
 ![Results](frontend/public/screenshot-results.png)
-*Side-by-side comparison of original low-light and enhanced result.*
+*Side-by-side comparison of original low-light and enhanced result in the updated Apple-style dark interface.*
 
 ---
 
@@ -127,6 +129,7 @@ venv\Scripts\activate
 source venv/bin/activate
 
 pip install -r requirements.txt
+uvicorn backend.main:app --host 0.0.0.0 --port 8000
 ```
 
 3. **Frontend Setup**
@@ -156,8 +159,28 @@ SUPABASE_KEY=your_supabase_key
 # Security
 ALLOWED_ORIGINS=http://localhost:5173
 MAX_FILE_SIZE_MB=10
+MAX_IMAGE_DIMENSION=4096
+
+# Inference quality tuning (no retraining)
+MAX_INFER_SIZE=512
+HIGHLIGHT_BLEND_STRENGTH=0.65
+HIGHLIGHT_START=0.82
+HIGHLIGHT_END=0.98
+SHADOW_BLEND_STRENGTH=0.78
+SHADOW_START=0.05
+SHADOW_END=0.45
+CLASSIC_SHADOW_GAMMA=0.72
+CLASSIC_BLEND=0.55
+OUTPUT_GAMMA=1.05
+
+# Runtime
+DEVICE=cpu
 LOG_LEVEL=INFO
 ```
+
+Notes:
+- Supabase is optional for local development. If unset, enhancement and analysis still work.
+- Sharing and feedback storage require valid Supabase credentials.
 
 ### 2. Production
 #### Backend (Hugging Face Spaces)
@@ -167,6 +190,13 @@ For the live backend, **do not** commit `.env`. Instead, configure these in the 
 |------|-------|------|-------|
 | `ALLOWED_ORIGINS` | `https://your-frontend.vercel.app` | Variable | **Crucial:** Must match your Vercel frontend URL so it can access the API. |
 | `MAX_FILE_SIZE_MB` | `10` | Variable | |
+| `MAX_IMAGE_DIMENSION` | `4096` | Variable | Maximum upload resolution |
+| `MAX_INFER_SIZE` | `512` | Variable | Max side used during inference while preserving aspect ratio |
+| `HIGHLIGHT_BLEND_STRENGTH` | `0.65` | Variable | Highlight recovery intensity |
+| `SHADOW_BLEND_STRENGTH` | `0.78` | Variable | Model influence in dark regions |
+| `CLASSIC_SHADOW_GAMMA` | `0.72` | Variable | Classical shadow-lift fallback gamma |
+| `CLASSIC_BLEND` | `0.55` | Variable | Blend amount for classical fallback |
+| `OUTPUT_GAMMA` | `1.05` | Variable | Final tone control |
 | `LOG_LEVEL` | `WARNING` | Variable | |
 | `SUPABASE_URL` | *your-supabase-url* | Secret | Optional (for feedback) |
 | `SUPABASE_KEY` | *your-anon-key* | Secret | Optional (for feedback) |
@@ -210,7 +240,14 @@ At the heart of Lumeo is a **U-Net** architecture. Originally designed for biome
 - **Decoder**: Reconstructs the image to capture "where" things are (localization).
 - **Skip Connections**: Bridge the encoder and decoder to preserve fine high-frequency details that are usually lost in deep networks.
 
-### 2. Loss Function Magic
+### 2. Inference Pipeline (No-Retrain Updates)
+- Uploads are resized with aspect ratio preserved and dimensions made divisible by 16.
+- Model output is applied more strongly in shadows and more conservatively in bright areas.
+- A hybrid classical gamma fallback is blended in dark regions for hard backlit scenes.
+- Highlights are protected by blending with the original image to reduce washout.
+- Final gamma tone control is applied before encoding the response.
+
+### 3. Loss Function Magic
 Training a low-light enhancer is tricky. Standard loss functions (like MSE) produce blurry results. We used a **Combined Loss**:
 - **L1 Loss**: For pixel-perfect accuracy.
 - **Perceptual Loss (VGG16)**: Ensures the image "looks" natural to the human eye by comparing high-level features.
@@ -224,7 +261,7 @@ Training a low-light enhancer is tricky. Standard loss functions (like MSE) prod
 - **Source:** LOL (Low-Light) Dataset
 - **Size:** 485 paired images (low-light + normal-light)
 - **Split:** 470 train / 15 validation
-- **Preprocessing:** Resized to 256x256, normalized to [-1, 1]
+- **Preprocessing:** Resized to 256x256 and converted to tensor in [0, 1]
 
 ### Hyperparameters
 ```python

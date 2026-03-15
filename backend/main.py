@@ -1,6 +1,7 @@
 import os
 import logging
 import time
+import torch
 from typing import List
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +12,6 @@ from slowapi.errors import RateLimitExceeded
 from .api import endpoints
 from .core.model import model_manager
 
-# Configure logging
 # Configure logging
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
@@ -103,7 +103,6 @@ async def shutdown_event():
     # Clean up resources
     if model_manager.model:
         del model_manager.model
-    import torch
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     logger.info("Application shutdown complete.")

@@ -2,11 +2,21 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.venv/
 venv/
+*.egg-info/
+dist/
+build/
+
+# Environment variables (never commit secrets)
 .env
+.env.*
+!.env.example
+
+# Logs
 *.log
 
-# Models
+# Models (use Git LFS for lumeo_unet.pth)
 models/*.pth
 !models/__init__.py
 !models/lumeo_unet.pth
@@ -16,5 +26,13 @@ data/
 datasets/
 backend/lumeo_unet.pth
 
-# Deployment
-# hfs_deploy/
+# Frontend build output
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# OS / Editor
+.DS_Store
+.idea/
+*.suo
+*.sw?

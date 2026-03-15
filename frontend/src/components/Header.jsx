@@ -5,7 +5,9 @@ const Header = ({ onHelpClick }) => {
     return (
         <header className="app-header">
             <div className="header-left">
-                <img src="/lumeo.svg" alt="Lumeo" className="logo-img" />
+                <div className="logo-shell" aria-hidden="true">
+                    <img src="/lumeo.svg" alt="Lumeo" className="logo-img animated-logo" />
+                </div>
                 <h1 className="header-title">Lumeo</h1>
                 <span className="beta-tag">BETA</span>
             </div>
